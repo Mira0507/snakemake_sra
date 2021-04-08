@@ -66,17 +66,19 @@ ucsc-wigtobigwig>=377
 ```Snakefile
 
 
-
 __author__ = "Mira Sohn"
 __copyright__ = "Copyright 2021, Mira Sohn"
 __email__ = "tonton07@gmail.com"
 
 
 
-######################## Defined by users #########################
-SAMPLE=["SRR12626034", "SRR12626035"]
-NAME=["A", "B"]
-###################################################################
+# This workflow is designed to download fastq files from SRA database. 
+# It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
+
+#################################### Defined by users #################################
+SAMPLE=["SRR12626034", "SRR12626035"]    # Sets SRA ID
+NAME=["A", "B"]                          # Sets sample names corresponding to each SRA 
+#######################################################################################
 
 DONE="etc/done.txt"
 DELETED="etc/deleted.txt"
@@ -88,7 +90,7 @@ rule all:
 
 rule export_sratoolkit: 
     """
-    This workflow uses pre-installed SRAtoolkit. Installation is needed, 
+    This workflow uses pre-installed SRAtoolkit. Installation is newly needed, 
     otherise.
     """
     log: 
@@ -166,12 +168,17 @@ rule clean_rsa:
         for x in SAMPLE:
             shell("rm {x}/*.sra")
             shell("rm -d {x}")
+    
+
+
+
+
 
 
 ```
 
 
-- ** With a configfile** 
+- **With a configfile** 
 
 
 ```Snakefile
@@ -215,7 +222,7 @@ snakemake --dag | dot -Tpdf > dag.pdf
 ```bash
 #!bin/bash
 
-# -j or --cores assignes the number of cores
+# Either -j or --cores assignes the number of cores
 snakemake -j 8
 
 ```
