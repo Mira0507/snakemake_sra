@@ -1,6 +1,6 @@
 ## Getting FASTQ files from NCBI SRA database using Snakemake 
 
-### This workflow demonstrates am example of reproducible and automated workflow getting FASTQ files from SRA database 
+### This workflow demonstrates an example of reproducible and automated workflow getting FASTQ files from SRA database 
 
 #### 1. Conda Environment 
 
