@@ -5,7 +5,7 @@
 #### 1. Conda Environment 
 
 - Reference: [Conda doc](https://docs.conda.io/projects/conda/en/latest/index.html), [lcdb-wf doc](https://lcdb.github.io/lcdb-wf)
-- This conda environment is a modified version of an env established by the NIH/NICHD Bioinformatics Scientific Programming Core (PI: Dr. Ryan Dale) 
+- I used an env established by the NIH/NICHD Bioinformatics Scientific Programming Core (PI: Dr. Ryan Dale) 
 
 
 ```yml
