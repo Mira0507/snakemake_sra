@@ -171,7 +171,7 @@ rule clean_rsa:
 ```
 
 
-- ** With a configfile** 
+- **With a configfile** 
 
 
 ```Snakefile
@@ -215,7 +215,7 @@ snakemake --dag | dot -Tpdf > dag.pdf
 ```bash
 #!bin/bash
 
-# -j or --cores assignes the number of cores
+# Either -j or --cores assignes the number of cores
 snakemake -j 8
 
 ```
