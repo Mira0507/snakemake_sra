@@ -328,7 +328,7 @@ snakemake --dag | dot -Tpdf > dag.pdf
 
 
 ```bash
-#!bin/bash
+#!/bin/bash
 
 # Either -j or --cores assignes the number of cores
 snakemake -j 8
