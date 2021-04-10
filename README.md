@@ -298,7 +298,7 @@ NAME:
 
 #### 3. Running the Snakemake workflow
 
-- Reference: [Snakemake Command line Arguments](https://snakemake.readthedocs.io/en/stable/executing/cli.html)
+- Reference: [Snakemake Command Line Arguments](https://snakemake.readthedocs.io/en/stable/executing/cli.html)
 
 - **Dry run**
 
