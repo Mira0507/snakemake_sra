@@ -302,10 +302,10 @@ prefix: /home/mira/lcdb-wf/myproj/env
 
 - Reference: [Snakemake doc](https://snakemake.readthedocs.io/en/stable)
 
-- **Without a configfile**
-
+- **Snakefile**
 
 ```Snakefile
+
 
 
 __author__ = "Mira Sohn"
@@ -318,235 +318,99 @@ __email__ = "tonton07@gmail.com"
 # It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
 
 #################################### Defined by users #################################
-SAMPLE=["SRR12626034", "SRR12626035"]    # Sets SRA ID
-NAME=["A", "B"]                          # Sets sample names corresponding to each SRA 
+configfile: "config/config.yaml"    # Sets path to the config file
 #######################################################################################
-
-DONE="etc/done.txt"
-DELETED="etc/deleted.txt"
-
+DONE="done.txt"
 
 rule all: 
     input:
-        DELETED
-
-rule export_sratoolkit: 
-    """
-    This workflow uses pre-installed SRAtoolkit. Installation is newly needed, 
-    otherise.
-    """
-    log: 
-        "snakemake_logs/log_export_sratoolkit.log"
-    benchmark: 
-        "snakemake_logs/bcm_export_sratoolkit.tsv" 
-    output: 
-        "etc/location_sratoolkit.txt" 
-    shell:
-        "export PATH=$PATH:~/lcdb-wf/myproj/env/bin | "
-        "which fastq-dump > {output}" 
+       DONE 
 
 rule get_sra: 
     """
     This rule downloads SRA files
     """
-    log:
-        "snakemake_logs/log_get_sra.log"
-    benchmark:
-        "snakemake_logs/bcm_get_sra.tsv"
-    input: 
-        "etc/location_sratoolkit.txt"
+    conda:
+        config["sraconda"]
     output: 
-        touch(DONE)
-    run: 
-        for x in SAMPLE:
-           shell("prefetch {x} > {log}") 
+        temp("fastq/{sample}/{sample}.sra")
+    shell:
+        "prefetch {wildcards.sample} -O fastq"
+
+
+
 
 rule get_fastq: 
     """
     This rule converts SRA to FASTQ files
     """
     input:
-       "etc/done.txt" 
+       "fastq/{sample}/{sample}.sra" 
     output: 
-        expand("fastq/{sample}_1.fastq", sample=SAMPLE)
-    run:
-        for x in SAMPLE:
-            shell("fastq-dump --split-files {x}/{x}.sra --outdir fastq")
+        "fastq/{sample}_1.fastq"
+    shell:
+        "fastq-dump --split-files fastq/{wildcards.sample}/{wildcards.sample}.sra -O fastq"
+        
 
 rule gzip_fastq:
     """
     This rule compresses FASTQ files using gzip
     """
     input: 
-        expand("fastq/{sample}_1.fastq", sample=SAMPLE)    
-    output: 
-        expand("fastq/{sample}_1.fastq.gz", sample=SAMPLE) 
-    shell:
-        "gzip {input}"
-
-rule name_fastq:
-    """
-    This rule renames fastq.gz files from the SRR to Sample names
-    """
-    input: 
-        expand("fastq/{sample}_1.fastq.gz", sample=SAMPLE) 
-    output: 
-        expand("fastq/{name}.fastq.gz", name=NAME)
-    run:
-        for i in range(len(NAME)):
-            FROM=SAMPLE[i]
-            TO=NAME[i]
-            shell("mv fastq/{FROM}_1.fastq.gz fastq/{TO}.fastq.gz")
-
-rule clean_rsa: 
-    """
-    This rule deletes the raw SRA files 
-    """
-    input: 
-        expand("fastq/{name}.fastq.gz", name=NAME)
-    output: 
-        touch(DELETED)
-    run:
-        for x in SAMPLE:
-            shell("rm {x}/*.sra")
-            shell("rm -d {x}")
-    
-
-
-
-
-
-
-```
-
-
-- **With a configfile** 
-
-
-```Snakefile
-
-
-
-__author__ = "Mira Sohn"
-__copyright__ = "Copyright 2021, Mira Sohn"
-__email__ = "tonton07@gmail.com"
-
-
-
-# This workflow is designed to download fastq files from SRA database. 
-# It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
-
-#################################### Defined by users #################################
-configfile:"config.yaml"    # Sets path to the config file
-#######################################################################################
-
-DONE="etc/done.txt"
-DELETED="etc/deleted.txt"
-
-
-rule all: 
-    input:
-        DELETED
-
-rule export_sratoolkit: 
-    """
-    This workflow uses pre-installed SRAtoolkit. Installation is newly needed, 
-    otherise.
-    """
-    log: 
-        "snakemake_logs/log_export_sratoolkit.log"
-    benchmark: 
-        "snakemake_logs/bcm_export_sratoolkit.tsv" 
-    output: 
-        "etc/location_sratoolkit.txt" 
-    shell:
-        "export PATH=$PATH:~/lcdb-wf/myproj/env/bin | "
-        "which fastq-dump > {output}" 
-
-rule get_sra: 
-    """
-    This rule downloads SRA files
-    """
-    log:
-        "snakemake_logs/log_get_sra.log"
-    benchmark:
-        "snakemake_logs/bcm_get_sra.tsv"
-    input: 
-        "etc/location_sratoolkit.txt"
-    output: 
-        touch(DONE)
-    run: 
-        for x in config["SAMPLE"]:
-           shell("prefetch {x} > {log}") 
-
-rule get_fastq: 
-    """
-    This rule converts SRA to FASTQ files
-    """
-    input:
-       "etc/done.txt" 
-    output: 
         expand("fastq/{sample}_1.fastq", sample=config["SAMPLE"])
-    run:
-        for x in config["SAMPLE"]:
-            shell("fastq-dump --split-files {x}/{x}.sra --outdir fastq")
-
-rule gzip_fastq:
-    """
-    This rule compresses FASTQ files using gzip
-    """
-    input: 
-        expand("fastq/{sample}_1.fastq", sample=config["SAMPLE"])    
     output: 
-        expand("fastq/{sample}_1.fastq.gz", sample=config["SAMPLE"]) 
+        "fastq/{name}.fastq.gz"
+    message:
+        "Gzipping in progress"
     shell:
-        "gzip {input}"
+        "gzip -cv {input} > {output}"
 
-rule name_fastq:
+rule clean:
     """
-    This rule renames fastq.gz files from the SRR to Sample names
+    This rule cleans the directory
     """
-    input: 
-        expand("fastq/{sample}_1.fastq.gz", sample=config["SAMPLE"]) 
-    output: 
+    input:
         expand("fastq/{name}.fastq.gz", name=config["NAME"])
+    output:
+        temp(DONE)
     run:
-        for i in range(len(config["NAME"])):
-            FROM=config["SAMPLE"][i]
-            TO=config["NAME"][i]
-            shell("mv fastq/{FROM}_1.fastq.gz fastq/{TO}.fastq.gz")
-
-rule clean_rsa: 
-    """
-    This rule deletes the raw SRA files 
-    """
-    input: 
-        expand("fastq/{name}.fastq.gz", name=config["NAME"])
-    output: 
-        touch(DELETED)
-    run:
-        for x in config["SAMPLE"]:
-            shell("rm {x}/*.sra")
-            shell("rm -d {x}")
+        shell("rm fastq/*.fastq | touch {DONE}")
 
 
 ```
 
-- config.yaml 
+- **config.yaml**
 
 
 ```yaml
 
 SAMPLE:
-  - 'SRR12626034'
-  - 'SRR12626042'
+  - 'SRR8757088'
+  - 'SRR8757084'
 
 NAME:
-  - 'C'
-  - 'D'
+  - 'rep1'
+  - 'rep2'
+  
+sraconda: 'config/sraconda.yml'
 
 ```
 
+
+- **sraconda.yml**
+
+
+```yml
+
+name: sraconda
+channels:
+  - conda-forge
+  - bioconda 
+  - defaults 
+dependencies:
+  - sra-tools
+
+```
 
 
 #### 3. Running the Snakemake workflow
