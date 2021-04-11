@@ -1,6 +1,6 @@
 ## Getting FASTQ files from NCBI SRA database using Snakemake 
 
-### This workflow demonstrates an example of reproducible and automated workflow getting FASTQ files (single-ended) from SRA database
+### This workflow demonstrates an example of reproducible and automated workflow getting FASTQ files from SRA database
 
 
 #### 1. Conda Environment 
@@ -223,7 +223,6 @@ __copyright__ = "Copyright 2021, Mira Sohn"
 __email__ = "tonton07@gmail.com"
 
 
-
 # This workflow is designed to download fastq files from SRA database. 
 # It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
 
@@ -231,49 +230,43 @@ __email__ = "tonton07@gmail.com"
 configfile: "config/config.yaml"    # Sets path to the config file
 #######################################################################################
 
+
+
 rule all: 
     input: 
-        expand("fastq/{name}.fastq.gz", name=config["NAME"])
-
-rule get_sra: 
-    """
-    This rule downloads SRA files
-    """
-    output: 
-        temp("fastq/{sample}/{sample}.sra")
-    shell:
-        "prefetch {wildcards.sample} -O fastq"
-
-
+        expand("fastq/{name}_{end}.fastq.gz", name=config["NAME"], end=config["END"])
 
 
 rule get_fastq: 
     """
-    This rule converts SRA to FASTQ files
+    This rule downloads SRA and converts to FASTQ files
+    """
+    output: 
+        "fastq/{sample}_{end}.fastq.gz"
+    shell:
+        "fastq-dump --split-files {wildcards.sample} --gzip -O fastq"
+
+rule rename_fastq: 
+    """
+    This rule renames FASTQ.GZ files
     """
     input:
-       "fastq/{sample}/{sample}.sra" 
-    output: 
-        temp("fastq/{sample}_1.fastq")
-    shell:
-        "fastq-dump --split-files fastq/{wildcards.sample}/{wildcards.sample}.sra -O fastq"
-        
-
-rule gzip_fastq:
-    """
-    This rule compresses FASTQ files using gzip
-    """
-    input: 
-        expand("fastq/{sample}_1.fastq", sample=config["SAMPLE"])
-    output: 
-        "fastq/{name}.fastq.gz"
-    message:
-        "Gzipping in progress"
-    shell:
-        "gzip -cv {input} > {output}"
+        expand("fastq/{sample}_{end}.fastq.gz", sample=config["SAMPLE"], end=config["END"])
+    output:
+        expand("fastq/{name}_{end}.fastq.gz", name=config["NAME"], end=config["END"])
+    params:
+    run:
+        for i in range(len(config["NAME"])): 
+            FROM="fastq/" + config["SAMPLE"][i]
+            TO="fastq/" + config["NAME"][i] 
+            EXT=".fastq.gz"
+            shell("mv {FROM}_1{EXT} {TO}_1{EXT}")
+            if len(config["END"]) > 1:    # In case of paired-end
+                shell("mv {FROM}_2{EXT} {TO}_2{EXT}")
 
 
 
+# The output files are stored in the fastq folder
 
 
 ```
@@ -290,8 +283,10 @@ SAMPLE:
 NAME:
   - 'rep1'
   - 'rep2'
-  
 
+END: 
+  - 1  
+# Add -2 for paired-end inputs
 ```
 
 
