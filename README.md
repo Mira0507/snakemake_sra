@@ -254,7 +254,6 @@ rule rename_fastq:
         expand("fastq/{sample}_{end}.fastq.gz", sample=config["SAMPLE"], end=config["END"])
     output:
         expand("fastq/{name}_{end}.fastq.gz", name=config["NAME"], end=config["END"])
-    params:
     run:
         for i in range(len(config["NAME"])): 
             FROM="fastq/" + config["SAMPLE"][i]
