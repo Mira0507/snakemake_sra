@@ -1,0 +1,11 @@
+SAMPLE:
+  - 'SRR543940'
+  - 'SRR543941'
+
+NAME:
+  - 'mouse_rep1'
+  - 'mouse_rep2'
+
+END: 
+  - 1  
+  - 2 # Delete this line if the input is single-end
