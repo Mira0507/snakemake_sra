@@ -1,10 +1,10 @@
 SAMPLE:
-  - 'SRR543940'
-  - 'SRR543941'
+  - 'SRR10954315	'
+  - 'SRR10954318'
 
 NAME:
-  - 'mouse_rep1'
-  - 'mouse_rep2'
+  - 'vector'
+  - 'PANX'
 
 END: 
   - 1  

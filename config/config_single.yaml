@@ -1,10 +1,10 @@
 SAMPLE:
-  - 'SRR8757088'
-  - 'SRR8757084'
+  - 'SRR13508743'
+  - 'SRR13508748'
 
 NAME:
-  - 'rep1'
-  - 'rep2'
+  - 'Control'
+  - 'Treatment'
 
 END: 
   - 1  
