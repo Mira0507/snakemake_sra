@@ -8,38 +8,33 @@ __email__ = "tonton07@gmail.com"
 # This workflow is designed to download fastq files from SRA database. 
 # It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
 
+
+
 #################################### Defined by users #################################
-configfile: "config/config_paired.yaml"    # Sets path to the config file
+configfile: "config/config_paired1.yaml"    # Sets path to the config file
 #######################################################################################
 
-shell.prefix('set -euo pipefail; source ~/.bashrc; ')
+shell.prefix('set -euo pipefail; ')
 shell.executable('/bin/bash')
 
 rule all: 
     input: 
-        expand("fastq/{name}_{end}.fastq.gz", name=config["NAME"], end=config["END"])
+        expand("fastq/{out}.fastq.gz", out=config['OUTPUT_LIST'])
 
-
-rule get_fastq: 
+rule get_fastq:
     """
     This rule downloads SRA and converts to FASTQ files
     """
-    output: 
-       "fastq/{sample}_{end}.fastq.gz"
-    shell:
-        "fastq-dump --split-files {wildcards.sample} --gzip -O fastq"
-
-rule rename: 
-    """
-    This rule renames fastq.gz files
-    """
-    input: 
-        expand("fastq/{sample}_{end}.fastq.gz", sample=config["SAMPLE"], end=config["END"])
     output:
-        expand("fastq/{name}_{end}.fastq.gz", name=config["NAME"], end=config["END"])
+        expand("fastq/{out}.fastq.gz", out=config['OUTPUT_LIST'])
+    params:
+        dic=config['SAMPLE'],
+        reads=config['END'],
+        sra=config['SRA']
     run:
-        for i in range(len(output)): 
-            IN=input[i]
-            OUT=output[i]
-            shell("mv {IN} {OUT}")
-        # The output files are stored in the fastq folder
+        shell("set +o pipefail; "
+              "fastq-dump --split-files {params.sra} --gzip")    # Without assigning the output directory (e.g. -O fastq)
+        for key, value in params.dic.items(): 
+              for read in params.reads: 
+                  shell("set +o pipefail; " 
+                        "mv {key}_{read}.fastq.gz fastq/{value}_{read}.fastq.gz") 
