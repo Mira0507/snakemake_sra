@@ -1,11 +1,23 @@
 SAMPLE:
-  - 'SRR13508743'
-  - 'SRR13508748'
+  SRR13508744: Ctrl
+  SRR13508749: Treatment
 
-NAME:
-  - 'Control'
-  - 'Treatment'
+
+
+
+OUTPUT_LIST:
+  - Ctrl_1
+  - Treatment_1
 
 END: 
-  - 1  
-# - 2 # Delete this line if the input is single-end
+  - 1
+
+
+SRA:
+  - SRR13508744
+  - SRR13508749
+
+
+
+
+
