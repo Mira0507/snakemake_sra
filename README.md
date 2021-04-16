@@ -19,7 +19,10 @@
 
 - Snakefile: [Snakefile](https://github.com/Mira0507/snakemake_sra/blob/master/Snakefile)
 
-- Config files: [config/config_paired.yaml (for paired end reads)](https://github.com/Mira0507/snakemake_sra/blob/master/config/config_paired.yaml), [config/config_single.yaml (for single end reads)](https://github.com/Mira0507/snakemake_sra/blob/master/config/config_single.yaml)
+- Config files: 
+    a. [config/config_paired1.yaml (for small size paired end reads)](https://github.com/Mira0507/snakemake_sra/blob/master/config/config_paired.yaml)
+    b. [config/config_paired2.yaml (for large size paired end reads)]()
+    c. [config/config_single.yaml (for single end reads)](https://github.com/Mira0507/snakemake_sra/blob/master/config/config_single.yaml)
 
 
 
