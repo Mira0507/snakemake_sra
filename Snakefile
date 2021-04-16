@@ -32,9 +32,7 @@ rule get_fastq:
         reads=config['END'],
         sra=config['SRA']
     run:
-        shell("set +o pipefail; "
-              "fastq-dump --split-files {params.sra} --gzip")    # Without assigning the output directory (e.g. -O fastq)
+        shell("fastq-dump --split-files {params.sra} --gzip")    # Without assigning the output directory (e.g. -O fastq)
         for key, value in params.dic.items(): 
               for read in params.reads: 
-                  shell("set +o pipefail; " 
-                        "mv {key}_{read}.fastq.gz fastq/{value}_{read}.fastq.gz") 
+                  shell("mv {key}_{read}.fastq.gz fastq/{value}_{read}.fastq.gz") 
