@@ -11,7 +11,7 @@ __email__ = "tonton07@gmail.com"
 
 
 #################################### Defined by users #################################
-configfile: "config/config_paired1.yaml"    # Sets path to the config file
+configfile: "config/config_single.yaml"    # Sets path to the config file
 #######################################################################################
 
 shell.prefix('set -euo pipefail; ')
