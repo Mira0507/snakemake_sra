@@ -1,0 +1,26 @@
+SAMPLE:
+  SRR8245179: 'Treated'
+  SRR8245176: 'Untreated'
+
+
+SRA:
+  - 'SRR8245179'
+  - 'SRR8245176' 
+
+
+
+
+OUTPUT_LIST:
+  - 'Treated_1'
+  - 'Treated_2'
+  - 'Untreated_1'
+  - 'Untreated_2'
+
+
+
+
+END:
+  - 1
+  - 2
+
+
