@@ -16,7 +16,7 @@ rule all:
     input:
         expand("fastq/{sample}_{end}.fastq.gz", sample=list(config['SAMPLE'].keys()), end=config['END'])
 
-rule get_fastq:   # Creates fastq.gz files in fastq directory
+rule get_fastq:   
     """
     This rule downloads SRA and converts to FASTQ files
     """
@@ -26,7 +26,7 @@ rule get_fastq:   # Creates fastq.gz files in fastq directory
         dic=config['SAMPLE']
     run:
         sra=params.dic[wildcards.sample]
-        shell("fastq-dump --split-files {sra} --gzip -X 100000")
+        shell("fastq-dump --split-files {sra} --gzip -X 100000")   # -X is for testing
         for i in range(len(output)):
             i += 1
             shell("mv {sra}_{i}.fastq.gz fastq/{wildcards.sample}_{i}.fastq.gz")
