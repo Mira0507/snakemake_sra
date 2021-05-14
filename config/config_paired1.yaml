@@ -1,25 +1,17 @@
+
+###################### Sample info ######################
+
 SAMPLE:
-  SRR8245179: 'Treated'
-  SRR8245176: 'Untreated'
-
-
-SRA:
-  - 'SRR8245179'
-  - 'SRR8245176' 
-
-
-
-
-OUTPUT_LIST:
-  - 'Treated_1'
-  - 'Treated_2'
-  - 'Untreated_1'
-  - 'Untreated_2'
+  Treated_rep1: SRR6461133
+  Treated_rep2: SRR6461134
+  Treated_rep3: SRR6461135
+  Control_rep1: SRR6461139
+  Control_rep2: SRR6461140
+  Control_rep3: SRR6461141
 
 
 
-
-END:
+END: 
   - 1
   - 2
 
