@@ -15,10 +15,4 @@ END:
   - 1
   - 2
 
-FASTQ_PREFIX:
-  - Treated_rep1
-  - Treated_rep2
-  - Treated_rep3
-  - Control_rep1
-  - Control_rep2
-  - Control_rep3
+
