@@ -1,0 +1,17 @@
+
+###################### Sample info ######################
+
+SAMPLE:
+  Untreated1: SRR8245176
+  Untreated2: SRR8245177
+  Untreated3: SRR8245178
+  Treated1: SRR8245179
+  Treated2: SRR8245180
+  Treated3: SRR8245181
+
+
+END: 
+  - 1
+  - 2
+
+
