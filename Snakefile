@@ -8,7 +8,7 @@ __email__ = "tonton07@gmail.com"
 # This workflow is designed to download fastq files from SRA database. 
 # It's possible to perform manually as well (see https://github.com/Mira0507/using_SRA)
 #################################### Defined by users #################################
-configfile: "config/config_paired1.yaml"    # Sets path to the config file
+configfile: "config/config_single.yaml"    # Sets path to the config file
 #######################################################################################
 
 
@@ -27,8 +27,7 @@ rule get_fastq:
     run:
         sra=params.dic[wildcards.sample]
         shell("fastq-dump --split-files {sra} --gzip -X 100000")   # -X is for testing
-        for i in range(len(output)):
-            i += 1
+        for i in range(1, len(output)+1):
             shell("mv {sra}_{i}.fastq.gz fastq/{wildcards.sample}_{i}.fastq.gz")
 
 
